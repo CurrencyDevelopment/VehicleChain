@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# PROVIDE: MVDSCoin
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# MVDSCoin_enable (bool): Set to NO by default. Set this variable to YES if you want to enable MVDSCoin service.
+# MVDSCoin_config (path): Set to /usr/local/etc/MVDSCoin.conf by default.
+# MVDSCoin_user:  The user account MVDSCoin daemon runs as. It uses 'root' user by default.
+# MVDSCoin_group: The group account MVDSCoin daemon runs as. It uses 'wheel' group by default.
+# MVDSCoin_datadir (str): Default to "/var/db/MVDSCoin". Base data directory.
+
+. /etc/rc.subr
+
+name=MVDSCoin
+rcvar=MVDSCoin_enable
+
+: ${MVDSCoin_enable:=NO}
+: ${MVDSCoin_config=/usr/local/etc/MVDSCoin.conf}
+: ${MVDSCoin_datadir=/var/db/MVDSCoin}
+: ${MVDSCoin_user="root"}
+: ${MVDSCoin_group="wheel"}
+
+required_files=${MVDSCoin_config}
+command=/usr/local/bin/MVDSCoind
+MVDSCoin_chdir=${MVDSCoin_datadir}
+pidfile="${MVDSCoin_datadir}/MVDSCoind.pid"
+stop_cmd=MVDSCoin_stop
+command_args="-conf=${MVDSCoin_config} -datadir=${MVDSCoin_datadir} -daemon -pid=${pidfile}"
+start_precmd="${name}_prestart"
+
+MVDSCoin_create_datadir()
+{
+	echo "Creating data directory"
+	eval mkdir -p ${MVDSCoin_datadir}
+	[ $? -eq 0 ] && chown -R ${MVDSCoin_user}:${MVDSCoin_group} ${MVDSCoin_datadir}
+}
+
+MVDSCoin_prestart()
+{
+	if [ ! -d "${MVDSCoin_datadir}/." ]; then
+		MVDSCoin_create_datadir || return 1
+	fi
+}
+
+MVDSCoin_requirepidfile()
+{
+	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
+		echo "${name} not running? (check $pidfile)."
+		exit 1
+	fi
+}
+
+MVDSCoin_stop()
+{
+    MVDSCoin_requirepidfile
+
+	echo "Stopping ${name}."
+	eval ${command} -conf=${MVDSCoin_config} -datadir=${MVDSCoin_datadir} stop
+	wait_for_pids ${rc_pid}
+}
+
+load_rc_config $name
+run_rc_command "$1"

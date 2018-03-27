@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+# -*- mode: makefile; coding: utf-8 -*-
+
+DEB_INSTALL_EXAMPLES_MVDSCoind += debian/examples/*
+DEB_INSTALL_MANPAGES_MVDSCoind += debian/manpages/*
+
+%:
+	dh --with bash-completion $@
+
+override_dh_auto_build:
+	cd src; $(MAKE) -f makefile.unix MVDSCoind USE_ASM=1 USE_LEVELDB=1
+	$(MAKE)
+
+override_dh_auto_clean:
+	if [ -f Makefile ]; then $(MAKE) clean; else rm -rf build/; rm -f MVDSCoin-qt; fi
+	cd src; $(MAKE) -f makefile.unix clean
+
+override_dh_auto_configure:
+	qmake MVDSCoin-qt.pro USE_ASM=1 USE_LEVELDB=1
+
+# Ensure wrapper is set executable
+binary-post-install/MVDSCoind:
+	chmod +x $(cdbs_curdestdir)usr/bin/MVDSCoind
+binary-post-install/MVDSCoin-qt:
+	chmod +x $(cdbs_curdestdir)usr/bin/MVDSCoin-qt

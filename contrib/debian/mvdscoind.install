@@ -1,0 +1,2 @@
+debian/bin/MVDSCoind usr/bin
+src/MVDSCoind usr/lib/MVDSCoin

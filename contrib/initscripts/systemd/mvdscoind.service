@@ -1,0 +1,11 @@
+[Unit]
+Description=MVDSCoin daemon serivce
+After=network.target
+
+[Service]
+Type=simple
+User=MVDSCoin
+ExecStart=/opt/MVDSCoin/MVDSCoind
+
+[Install]
+WantedBy=multi-user.target

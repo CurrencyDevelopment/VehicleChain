@@ -1,0 +1,5 @@
+MVDSCoin-qt usr/bin
+share/pixmaps/MVDSCoin32.xpm usr/share/pixmaps
+share/pixmaps/MVDSCoin80.xpm usr/share/pixmaps
+debian/MVDSCoin-qt.desktop usr/share/applications
+debian/MVDSCoin-qt.protocol usr/share/kde4/services/

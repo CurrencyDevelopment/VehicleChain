@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=MVDSCoin
+Comment=MVDSCoin P2P Cryptocurrency
+Comment[ru]=MVDSCoin, P2P криптовалюта
+Comment[fr]=MVDSCoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=MVDSCoin, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/MVDSCoin-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/MVDSCoin80.xpm
+MimeType=x-scheme-handler/MVDSCoin;
+Categories=Office;
